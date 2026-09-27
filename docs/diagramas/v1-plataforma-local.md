@@ -3,10 +3,16 @@
 ```mermaid
 flowchart TB
 
-    CLIENT["Windows<br/>SQL Server Management Studio"]
+    subgraph ACCESS[" "]
+        direction LR
+        REPO["GitHub<br/><b>data-platform-architecture</b>"]
+        CLIENT["Windows<br/>SSMS"]
+    end
 
     subgraph HOST["Ubuntu VM · datalab-dev"]
         direction TB
+
+        COMPOSE["Docker Compose<br/>compose.yaml"]
 
         subgraph DOCKER["Docker Engine"]
             direction TB
@@ -19,13 +25,14 @@ flowchart TB
 
             SQL ---|"/var/opt/mssql"| VOL
         end
+
+        COMPOSE -->|"deploy"| SQL
     end
 
+    REPO -->|"git clone"| COMPOSE
     CLIENT -->|"TCP 1433"| SQL
 
-    style HOST text-align:left
-    style DOCKER text-align:left
-    style NETWORK text-align:left
+    style ACCESS fill:none,stroke:none
 ```
 
 ## Componentes

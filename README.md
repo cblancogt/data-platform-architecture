@@ -15,10 +15,16 @@ El servicio se publica mediante TCP 1433 y puede administrarse desde SQL Server 
 ```mermaid
 flowchart TB
 
-    CLIENT["Windows<br/>SQL Server Management Studio"]
+    subgraph ACCESS[" "]
+        direction LR
+        REPO["GitHub<br/><b>data-platform-architecture</b>"]
+        CLIENT["Windows<br/>SSMS"]
+    end
 
     subgraph HOST["Ubuntu VM · datalab-dev"]
         direction TB
+
+        COMPOSE["Docker Compose<br/>compose.yaml"]
 
         subgraph DOCKER["Docker Engine"]
             direction TB
@@ -31,9 +37,14 @@ flowchart TB
 
             SQL ---|"/var/opt/mssql"| VOL
         end
+
+        COMPOSE -->|"deploy"| SQL
     end
 
+    REPO -->|"git clone"| COMPOSE
     CLIENT -->|"TCP 1433"| SQL
+
+    style ACCESS fill:none,stroke:none
 ```
 
 La arquitectura mantiene los datos independientes de la infraestructura que ejecuta SQL Server, permitiendo renovar o reconstruir la plataforma sin comprometer la información almacenada.
