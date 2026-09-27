@@ -1,0 +1,21 @@
+services:
+  dp-sqlserver-service:
+    container_name: dp-sql-server-container
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD}"
+    ports:
+      - "1433:1433"
+    volumes:
+      - dp-sqlserver-volume:/var/opt/mssql
+    networks:
+      - dp-network
+
+volumes:
+  dp-sqlserver-volume:
+    name: dp-sqlserver-volume
+  
+networks:
+  dp-network:
+    name: dp-network
