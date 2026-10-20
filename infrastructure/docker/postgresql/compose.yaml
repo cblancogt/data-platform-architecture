@@ -1,0 +1,48 @@
+services:
+  dp-postgresql-service:
+    container_name: dp-postgresql-container
+    image: postgres:18
+
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - type: volume
+        source: dp-postgresql-volume
+        target: /var/lib/postgresql
+
+    networks:
+      - dp-network
+
+  dp-pgadmin-service:
+    container_name: dp-pgadmin-container
+    image: dpage/pgadmin4:latest
+
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "${PGADMIN_DEFAULT_EMAIL}"
+      PGADMIN_DEFAULT_PASSWORD: "${PGADMIN_DEFAULT_PASSWORD}"
+
+    ports:
+      - "5050:80"
+
+    volumes:
+      - dp-pgadmin-volume:/var/lib/pgadmin
+
+    networks:
+      - dp-network
+
+volumes:
+  dp-postgresql-volume:
+    name: dp-postgresql-volume
+
+  dp-pgadmin-volume:
+    name: dp-pgadmin-volume
+
+networks:
+  dp-network:
+    external: true
